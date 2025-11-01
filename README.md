@@ -8,4 +8,4 @@ Make sure you have a C compiler installed (`gcc` or `clang`).
 ### Compile:
 
 ```sh
-gcc -o bs main.c
+gcc -o fs main.c
