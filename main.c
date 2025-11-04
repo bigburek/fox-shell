@@ -13,12 +13,15 @@ struct args {
 args split_line(char* line);
 void free_lines(char** tokens, int length);
 int lanuch_process(char** args);
-
+int builtin_find_execute(char** args);
+int register_builtins();
+int execute(char** args);
 int main (void) {
 	char* line = NULL;
 	size_t len = 0;
 	ssize_t nread;
 
+	register_builtins();
 	args arguments;
 	int status;	
 	do {
@@ -31,7 +34,9 @@ int main (void) {
 		}
 		
 		arguments = split_line(line);
-		status = lanuch_process(arguments.tokens);	
+		
+
+		status = execute(arguments.tokens);	
 		free_lines(arguments.tokens, arguments.size);	
 		} while (status);
 	free(line);
@@ -51,7 +56,7 @@ args split_line(char* line) {
 			//then check for fail and free the memory if it failed. then if it didnt we update the old variable with the new pointers
 			if (!temporary) {
 				free_lines(tokens, index);
-				fprintf(stderr, "bs: allocation error\n");
+				fprintf(stderr, "fs: allocation error\n");
 				exit(EXIT_FAILURE);
 			}
 			tokens = temporary;
@@ -61,7 +66,7 @@ args split_line(char* line) {
 			if (!tokens[index]) 
 			{
 				free_lines(tokens, index); 
-				fprintf(stderr, "bs: allocation error\n");
+				fprintf(stderr, "fs: allocation error\n");
 				exit(EXIT_FAILURE);
 			}
 		//printf("%s %s \n", "Token: ", token);
@@ -80,6 +85,16 @@ void free_lines(char** tokens, int length) {
 	free(tokens);
 }
 
+int execute(char** args)
+{
+	int index = 0;
+	int result = builtin_find_execute(args); 
+	if (result == 2) {	
+		return lanuch_process(args);
+	} else return result;
+}	
+
+
 int lanuch_process(char** args)
 {
   pid_t pid, wpid;
@@ -89,12 +104,12 @@ int lanuch_process(char** args)
   if (pid == 0) {
     // Child process
     if (execvp(args[0], args) == -1) { //execvp is a variant of exec(), expects a program name and then a an array of strings
-      perror("bs"); //prints system's error msg along with bs
+      perror("fs"); //prints system's error msg along with bs
     }
     exit(EXIT_FAILURE);
   } else if (pid < 0) {
     // Error forking
-    perror("bs");
+    perror("fs");
   } else {
     // Parent process
     do {
