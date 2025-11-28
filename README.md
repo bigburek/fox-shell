@@ -6,7 +6,7 @@ Make sure you have a C compiler installed (`gcc` or `clang`).
 ### Compile:
 
 ```sh
-gcc -o fs main.c bultin.c uthash.c
+gcc -o fs main.c builtin.c uthash.h
 ```
 
 ### Features:
