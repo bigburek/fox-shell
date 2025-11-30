@@ -15,7 +15,7 @@ gcc -o fs main.c builtin.c uthash.h
 - Builtins (hashmap implementation)
 
 ### TODOs and Improvements:
-- Quotes
+- Quotes - DONE ✅
 - Backlash escaping
 - Piping
 - Input/output redirection
