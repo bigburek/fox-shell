@@ -61,6 +61,8 @@ args split_line(char* line) {
 			}
 			tokens = temporary;
 		}
+		
+
 		tokens[index] = strdup(token);
 			//also check for failure here and free
 			if (!tokens[index]) 
@@ -69,9 +71,18 @@ args split_line(char* line) {
 				fprintf(stderr, "fs: allocation error\n");
 				exit(EXIT_FAILURE);
 			}
-		//printf("%s %s \n", "Token: ", token);
+	//	printf("%s %s \n", "Token: ", token);
 		index++;
+		char next = *(token + strlen(token) + 1);
+		if (next == '"') {
+			token = strtok(NULL, "\"");
+		} else if (next == '\'') {
+			token = strtok(NULL, "\'");
+		} else {
 		token = strtok(NULL, " \t\r\n");
+		}
+		
+	
 	}
 	tokens[index] = NULL; //ADDS NULL AT THE END OF ARRAY SO WE CAN ITERATE IT SAFELY
 	args a;
